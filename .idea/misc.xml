@@ -3,4 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.10 (Tapo100Automation_Laptop)" />
   </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (Tapo100Automation_Laptop)" project-jdk-type="Python SDK" />
 </project>
