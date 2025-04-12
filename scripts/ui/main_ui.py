@@ -5,7 +5,7 @@ import psutil
 import time
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QWidget,
                              QVBoxLayout, QHBoxLayout, QProgressBar,
-                             QGridLayout, QLineEdit)
+                             QGridLayout, QLineEdit, QPushButton, QApplication)
 from PyQt5.QtGui import QPixmap
 
 class MainWindow (QMainWindow):
@@ -13,10 +13,12 @@ class MainWindow (QMainWindow):
     _window_title = "Tapo 100 Automation For Laptop"
     _window_icon = "TODO: Create an icon and link here"
     _window_position = [0, 0, 400, 200] # X, Y, Width, Height
-    _range_charge = [0, 100] # Min, Max
+    _range_pb_battery = [0, 100] # Min, Max
+    _range_charge = [20, 80] # Min, Max
     _refresh_rate = 1 # Per Second
     _is_plugged = False
     _is_charging = False
+    battery_charge = 0
 
     def __init__(self):
         super().__init__()
@@ -28,11 +30,12 @@ class MainWindow (QMainWindow):
 
         self._is_charging = psutil.sensors_battery().power_plugged # Getting the first charge value3
 
-        self.initUI()
+        self.init_ui()
         self.thread_update = threading.Thread(target=self.update_loop, daemon=True)
         self.thread_update.start()
+        # TODO: Load the min and max values
 
-    def initUI(self):
+    def init_ui(self):
         layout_grid = QGridLayout()
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -40,19 +43,17 @@ class MainWindow (QMainWindow):
         self.img_battery_discharging = QLabel(self)
         self.img_battery_discharging.setGeometry(0, 0, 50, 25)
         self.img_battery_discharging.setPixmap(QPixmap(self.resource_path(os.path.join('images', 'uis', 'Battery_Discharging_50x25.png'))))
-        # self.img_battery_discharging.setScaledContents(True)
         self.img_battery_discharging.show()
         layout_grid.addWidget(self.img_battery_discharging, 0, 1)
 
         self.img_battery_charging = QLabel(self)
         self.img_battery_charging.setGeometry(0, 0, 50, 25)
         self.img_battery_charging.setPixmap(QPixmap(self.resource_path(os.path.join('images', 'uis', 'Battery_Charging_50x25.png'))))
-        # self.img_battery_charging.setScaledContents(True)
         self.img_battery_charging.hide()
         layout_grid.addWidget(self.img_battery_charging, 0, 1)
 
         self.pb_battery = QProgressBar()
-        self.pb_battery.setRange(self._range_charge[0], self._range_charge[1])
+        self.pb_battery.setRange(self._range_pb_battery[0], self._range_pb_battery[1])
         self.pb_battery.setValue(0)
         layout_grid.addWidget(self.pb_battery, 0, 0)
 
@@ -74,6 +75,10 @@ class MainWindow (QMainWindow):
         self.le_max.setText("80")
         layout_grid.addWidget(self.le_max, 3, 1)
 
+        self.btn_save = QPushButton("Save", self)
+        self.btn_save.clicked.connect(self.save_values)
+        layout_grid.addWidget(self.btn_save, 4, 0)
+
         central_widget.setLayout(layout_grid)
 
     def resource_path(self, relative_path):
@@ -88,17 +93,21 @@ class MainWindow (QMainWindow):
         # TODO: Store the min and max values and use those to check.
         #       Also use a button to update the values.
 
-        if self._is_plugged and self._is_charging and self.battery_charge >= int(self.le_max.text()):
+        if self._is_plugged and self._is_charging and self.battery_charge >= self._range_charge[1]:
             print("TODO: Turn off Tapo100")
             self._is_charging = False
-        elif not self._is_plugged and not self._is_charging and self.battery_charge <= int(self.le_min.text()):
+        elif not self._is_plugged and not self._is_charging and self.battery_charge <= self._range_charge[0]:
             print("TODO: Turn on Tapo100")
             self._is_charging = True
+
+    def save_values(self):
+        self._range_charge[0] = int(self.le_min.text())
+        self._range_charge[1] = int(self.le_max.text())
 
     def update_loop(self):
         while True:
             time.sleep(self._refresh_rate)
-            self.battery_charge = psutil.sensors_battery().percent
+            self.battery_charge = int(psutil.sensors_battery().percent)
             self._is_plugged = psutil.sensors_battery().power_plugged
             self.validate_charging()
             self.pb_battery.setValue(self.battery_charge)
