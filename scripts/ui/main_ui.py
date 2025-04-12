@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import (QMainWindow, QLabel, QWidget,
                              QVBoxLayout, QHBoxLayout, QProgressBar,
                              QGridLayout, QLineEdit, QPushButton, QApplication)
 from PyQt5.QtGui import QPixmap
+from PyQt5.uic.Compiler.qtproxies import QtGui
+
 
 class MainWindow (QMainWindow):
 
@@ -19,6 +21,9 @@ class MainWindow (QMainWindow):
     _is_plugged = False
     _is_charging = False
     battery_charge = 0
+    ip = ""
+    email = ""
+    password = ""
 
     def __init__(self):
         super().__init__()
@@ -52,6 +57,12 @@ class MainWindow (QMainWindow):
         self.img_battery_charging.hide()
         layout_grid.addWidget(self.img_battery_charging, 0, 1)
 
+        self.img_tapo_icon = QLabel(self)
+        # self.img_tapo_icon.setGeometry(260, 9, 25, 25)
+        self.img_tapo_icon.setPixmap(QPixmap(self.resource_path(os.path.join('images', 'uis', 'TapoPlug_x25.png'))))
+        self.img_tapo_icon.hide()
+        layout_grid.addWidget(self.img_tapo_icon, 0, 2)
+
         self.pb_battery = QProgressBar()
         self.pb_battery.setRange(self._range_pb_battery[0], self._range_pb_battery[1])
         self.pb_battery.setValue(0)
@@ -75,9 +86,35 @@ class MainWindow (QMainWindow):
         self.le_max.setText("80")
         layout_grid.addWidget(self.le_max, 3, 1)
 
+        self.lbl_ip = QLabel(self)
+        self.lbl_ip.setText("IP")
+        layout_grid.addWidget(self.lbl_ip, 4, 0)
+
+        self.le_ip = QLineEdit(self)
+        layout_grid.addWidget(self.le_ip, 4, 1)
+
+        self.lbl_email = QLabel(self)
+        self.lbl_email.setText("Email")
+        layout_grid.addWidget(self.lbl_email, 5, 0)
+
+        self.le_email = QLineEdit(self)
+        layout_grid.addWidget(self.le_email, 5, 1)
+
+        self.lbl_password = QLabel(self)
+        self.lbl_password.setText("Password")
+        layout_grid.addWidget(self.lbl_password, 6, 0)
+
+        self.le_password = QLineEdit(self)
+        self.le_password.setEchoMode(QLineEdit.Password)
+        layout_grid.addWidget(self.le_password, 6, 1)
+
+        self.btn_connect = QPushButton("Connect", self)
+        self.btn_connect.clicked.connect(self.connect_tapo)
+        layout_grid.addWidget(self.btn_connect, 7, 0)
+
         self.btn_save = QPushButton("Save", self)
         self.btn_save.clicked.connect(self.save_values)
-        layout_grid.addWidget(self.btn_save, 4, 0)
+        layout_grid.addWidget(self.btn_save, 7, 1)
 
         central_widget.setLayout(layout_grid)
 
@@ -103,6 +140,13 @@ class MainWindow (QMainWindow):
     def save_values(self):
         self._range_charge[0] = int(self.le_min.text())
         self._range_charge[1] = int(self.le_max.text())
+        self.ip = self.le_ip.text()
+        self.email = self.le_email.text()
+        self.password = self.le_password.text()
+        print(self.password)
+
+    def connect_tapo(self):
+        print("TODO: Connect tapo and change the icon as well.")
 
     def update_loop(self):
         while True:
