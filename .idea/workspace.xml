@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ec662f2-0a69-464d-8476-7928fe60b02e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/scripts/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/tapo_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/ui/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Tapo100Automation_Laptop.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Tapo100Automation_Laptop.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/save_load_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ui/main_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ui/main_ui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
