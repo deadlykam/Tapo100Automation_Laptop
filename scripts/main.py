@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from scripts.ui.main_ui import MainWindow
 
-
 def main():
     app = QApplication(sys.argv)
     window = MainWindow()
@@ -11,5 +10,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-print(sys.path)

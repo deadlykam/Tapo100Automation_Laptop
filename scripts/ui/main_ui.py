@@ -3,11 +3,12 @@ import sys
 import os
 import psutil
 import time
+from scripts.tapo_manager import connect_tapo
+from scripts.tapo_manager import set_tapo
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QWidget,
-                             QVBoxLayout, QHBoxLayout, QProgressBar,
-                             QGridLayout, QLineEdit, QPushButton, QApplication)
+                             QProgressBar, QGridLayout, QLineEdit,
+                             QPushButton)
 from PyQt5.QtGui import QPixmap
-from PyQt5.uic.Compiler.qtproxies import QtGui
 
 
 class MainWindow (QMainWindow):
@@ -58,7 +59,6 @@ class MainWindow (QMainWindow):
         layout_grid.addWidget(self.img_battery_charging, 0, 1)
 
         self.img_tapo_icon = QLabel(self)
-        # self.img_tapo_icon.setGeometry(260, 9, 25, 25)
         self.img_tapo_icon.setPixmap(QPixmap(self.resource_path(os.path.join('images', 'uis', 'TapoPlug_x25.png'))))
         self.img_tapo_icon.hide()
         layout_grid.addWidget(self.img_tapo_icon, 0, 2)
@@ -132,9 +132,11 @@ class MainWindow (QMainWindow):
 
         if self._is_plugged and self._is_charging and self.battery_charge >= self._range_charge[1]:
             print("TODO: Turn off Tapo100")
+            set_tapo(False)
             self._is_charging = False
         elif not self._is_plugged and not self._is_charging and self.battery_charge <= self._range_charge[0]:
             print("TODO: Turn on Tapo100")
+            set_tapo(True)
             self._is_charging = True
 
     def save_values(self):
@@ -143,10 +145,10 @@ class MainWindow (QMainWindow):
         self.ip = self.le_ip.text()
         self.email = self.le_email.text()
         self.password = self.le_password.text()
-        print(self.password)
 
     def connect_tapo(self):
-        print("TODO: Connect tapo and change the icon as well.")
+        connect_tapo(self.ip, self.email, self.password)
+        self.img_tapo_icon.show()
 
     def update_loop(self):
         while True:
