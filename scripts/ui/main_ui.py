@@ -11,13 +11,14 @@ from scripts.save_load_manager import data_load
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QWidget,
                              QProgressBar, QGridLayout, QLineEdit,
                              QPushButton)
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon
 
 
 class MainWindow (QMainWindow):
 
     _window_title = "Tapo 100 Automation For Laptop"
-    _window_icon = "TODO: Create an icon and link here"
+    _version = "1.0.0"
+    _window_icon = "TAL_Logo_199x256.png"
     _window_position = [0, 0, 400, 200] # X, Y, Width, Height
     _range_pb_battery = [0, 100] # Min, Max
     _range_charge = [20, 80] # Min, Max
@@ -32,11 +33,12 @@ class MainWindow (QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle(self._window_title)
+        self.setWindowTitle(self._window_title + " - " + self._version)
         self.setGeometry(self._window_position[0],
                          self._window_position[1],
                          self._window_position[2],
                          self._window_position[3])
+        self.setWindowIcon(QIcon("images/logo/TAL_Logo_199x256.png"))
 
         self._is_charging = psutil.sensors_battery().power_plugged # Getting the first charge value
 
@@ -52,18 +54,19 @@ class MainWindow (QMainWindow):
 
         self.img_battery_discharging = QLabel(self)
         self.img_battery_discharging.setGeometry(0, 0, 50, 25)
-        self.img_battery_discharging.setPixmap(QPixmap(self.resource_path(os.path.join('images', 'uis', 'Battery_Discharging_50x25.png'))))
+        self.img_battery_discharging.setPixmap(QPixmap("images/uis/Battery_Discharging_50x25.png"))
+
         self.img_battery_discharging.show()
         layout_grid.addWidget(self.img_battery_discharging, 0, 1)
 
         self.img_battery_charging = QLabel(self)
         self.img_battery_charging.setGeometry(0, 0, 50, 25)
-        self.img_battery_charging.setPixmap(QPixmap(self.resource_path(os.path.join('images', 'uis', 'Battery_Charging_50x25.png'))))
+        self.img_battery_charging.setPixmap(QPixmap("images/uis/Battery_Charging_50x25.png"))
         self.img_battery_charging.hide()
         layout_grid.addWidget(self.img_battery_charging, 0, 1)
 
         self.img_tapo_icon = QLabel(self)
-        self.img_tapo_icon.setPixmap(QPixmap(self.resource_path(os.path.join('images', 'uis', 'TapoPlug_x25.png'))))
+        self.img_tapo_icon.setPixmap(QPixmap("images/uis/TapoPlug_x25.png"))
         self.img_tapo_icon.hide()
         layout_grid.addWidget(self.img_tapo_icon, 0, 2)
 
@@ -122,10 +125,6 @@ class MainWindow (QMainWindow):
 
         central_widget.setLayout(layout_grid)
 
-    def resource_path(self, relative_path):
-        base_path = getattr(sys, '_MEIPASS', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-        return os.path.join(base_path, relative_path)
-
     def set_charging_image(self, is_charging):
         self.img_battery_charging.setVisible(is_charging)
         self.img_battery_discharging.setVisible(not is_charging)
@@ -155,12 +154,16 @@ class MainWindow (QMainWindow):
     def load_values(self, data):
         self._range_charge[0] = data["min"]
         self.le_min.setText(str(data["min"]))
+        self.lbl_min.setText("Min (%) -> " + str(self._range_charge[0]) + "%")
         self._range_charge[1] = data["max"]
         self.le_max.setText(str(data["max"]))
+        self.lbl_max.setText("Max (%) -> " + str(self._range_charge[1]) + "%")
         self.ip = data["ip"]
         self.le_ip.setText(data["ip"])
+        self.lbl_ip.setText("IP: " + self.ip)
         self.email = data["email"]
         self.le_email.setText(data["email"])
+        self.lbl_email.setText("Email: " + self.email)
         self.password = data["password"]
         self.le_password.setText(data["password"])
 
