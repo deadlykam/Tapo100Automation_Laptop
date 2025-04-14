@@ -37,7 +37,7 @@ class MainWindow (QMainWindow):
                          self._window_position[1],
                          self._window_position[2],
                          self._window_position[3])
-        self.setWindowIcon(QIcon("images/logo/TAL_Logo_199x256.png"))
+        self.setWindowIcon(QIcon("images/logo/TAL_Logo_256x256.ico"))
 
         self._is_charging = psutil.sensors_battery().power_plugged # Getting the first charge value
 
