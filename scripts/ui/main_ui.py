@@ -1,6 +1,4 @@
 import threading
-import sys
-import os
 import psutil
 import time
 from scripts.tapo_manager import connect_tapo
@@ -8,6 +6,7 @@ from scripts.tapo_manager import set_tapo
 from scripts.save_load_manager import is_data
 from scripts.save_load_manager import data_save
 from scripts.save_load_manager import data_load
+from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QWidget,
                              QProgressBar, QGridLayout, QLineEdit,
                              QPushButton)
@@ -44,7 +43,9 @@ class MainWindow (QMainWindow):
 
         self.init_ui()
         if is_data(): self.load_values(data_load())
-        self.thread_update = threading.Thread(target=self.update_loop, daemon=True)
+        self.thread_update = UpdateWorker(self._refresh_rate)
+        self.thread_update.battery_update.connect(self.update_battery_charge_value)
+        self.thread_update.charging_status.connect(self.handle_charging_status)
         self.thread_update.start()
 
     def init_ui(self):
@@ -172,11 +173,35 @@ class MainWindow (QMainWindow):
         self.is_connected = True
         self.img_tapo_icon.show()
 
-    def update_loop(self):
-        while True:
-            time.sleep(self._refresh_rate)
-            self.battery_charge = int(psutil.sensors_battery().percent)
-            self._is_plugged = psutil.sensors_battery().power_plugged
-            self.validate_charging()
-            self.pb_battery.setValue(self.battery_charge)
-            self.set_charging_image(self._is_plugged)
+    def handle_charging_status(self, is_plugged):
+        self._is_plugged = is_plugged
+        self.validate_charging()
+        self.set_charging_image(is_plugged)
+
+    def closeEvent(self, event):
+        if hasattr(self, 'thread_update'):
+            self.thread_update.stop()
+            self.thread_update.wait()
+        event.accept()
+
+    def update_battery_charge_value(self, value):
+        self.pb_battery.setValue(value)
+        self.battery_charge = value
+
+class UpdateWorker(QThread):
+    battery_update = pyqtSignal(int)
+    charging_status = pyqtSignal(bool)
+
+    def __init__(self, refresh_rate=1, parent=None):
+        super().__init__(parent)
+        self.refresh_rate = refresh_rate
+        self._running = True
+
+    def run(self):
+        while self._running:
+            battery = psutil.sensors_battery()
+            self.battery_update.emit(int(battery.percent))
+            self.charging_status.emit(battery.power_plugged)
+            time.sleep(self.refresh_rate)
+
+    def stop(self): self._running = False

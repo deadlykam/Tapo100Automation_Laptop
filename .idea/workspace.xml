@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ec662f2-0a69-464d-8476-7928fe60b02e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/images/logo/TAL_Logo_199x256.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/ui/Battery_Discharging.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ui/main_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ui/main_ui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +39,7 @@
     "Python.main_ui.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "features-ui",
+    "git-widget-placeholder": "features-ui-qthread",
     "last_opened_file_path": "D:/Synology_NAS/SynologyDrive/PycharmProjects/Tapo100Automation_Laptop/Projects/Project_1/Tapo100Automation_Laptop",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
