@@ -1,6 +1,8 @@
-import threading
+import sys
+import os
 import psutil
 import time
+import qdarktheme
 from scripts.tapo_manager import connect_tapo
 from scripts.tapo_manager import set_tapo
 from scripts.save_load_manager import is_data
@@ -9,7 +11,7 @@ from scripts.save_load_manager import data_load
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QWidget,
                              QProgressBar, QGridLayout, QLineEdit,
-                             QPushButton)
+                             QPushButton, QCheckBox)
 from PyQt5.QtGui import QPixmap, QIcon
 
 
@@ -24,6 +26,7 @@ class MainWindow (QMainWindow):
     _refresh_rate = 1 # Per Second
     _is_plugged = False
     _is_charging = False
+    _is_dark_theme = False
     battery_charge = 0
     ip = ""
     email = ""
@@ -37,12 +40,13 @@ class MainWindow (QMainWindow):
                          self._window_position[1],
                          self._window_position[2],
                          self._window_position[3])
-        self.setWindowIcon(QIcon("images/logo/TAL_Logo_256x256.ico"))
+        self.setWindowIcon(QIcon(self.resource_path("images/logo/TAL_Logo_256x256.ico")))
 
         self._is_charging = psutil.sensors_battery().power_plugged # Getting the first charge value
 
         self.init_ui()
         if is_data(): self.load_values(data_load())
+        self.set_theme()
         self.thread_update = UpdateWorker(self._refresh_rate)
         self.thread_update.battery_update.connect(self.update_battery_charge_value)
         self.thread_update.charging_status.connect(self.handle_charging_status)
@@ -55,21 +59,41 @@ class MainWindow (QMainWindow):
 
         self.img_battery_discharging = QLabel(self)
         self.img_battery_discharging.setGeometry(0, 0, 50, 25)
-        self.img_battery_discharging.setPixmap(QPixmap("images/uis/Battery_Discharging_50x25.png"))
-
+        self.img_battery_discharging.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Discharging_50x25.png")))
         self.img_battery_discharging.show()
         layout_grid.addWidget(self.img_battery_discharging, 0, 1)
 
+        self.img_battery_discharging_d = QLabel(self)
+        self.img_battery_discharging_d.setGeometry(0, 0, 50, 25)
+        self.img_battery_discharging_d.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Discharging_D_50x25.png")))
+        self.img_battery_discharging_d.hide()
+        layout_grid.addWidget(self.img_battery_discharging_d, 0, 1)
+
         self.img_battery_charging = QLabel(self)
         self.img_battery_charging.setGeometry(0, 0, 50, 25)
-        self.img_battery_charging.setPixmap(QPixmap("images/uis/Battery_Charging_50x25.png"))
+        self.img_battery_charging.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Charging_50x25.png")))
         self.img_battery_charging.hide()
         layout_grid.addWidget(self.img_battery_charging, 0, 1)
 
+        self.img_battery_charging_d = QLabel(self)
+        self.img_battery_charging_d.setGeometry(0, 0, 50, 25)
+        self.img_battery_charging_d.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Charging_D_50x25.png")))
+        self.img_battery_charging_d.hide()
+        layout_grid.addWidget(self.img_battery_charging_d, 0, 1)
+
         self.img_tapo_icon = QLabel(self)
-        self.img_tapo_icon.setPixmap(QPixmap("images/uis/TapoPlug_x25.png"))
+        self.img_tapo_icon.setPixmap(QPixmap(self.resource_path("images/uis/TapoPlug_x25.png")))
         self.img_tapo_icon.hide()
         layout_grid.addWidget(self.img_tapo_icon, 0, 2)
+
+        self.img_tapo_icon_d = QLabel(self)
+        self.img_tapo_icon_d.setPixmap(QPixmap(self.resource_path("images/uis/TapoPlug_D_x25.png")))
+        self.img_tapo_icon_d.hide()
+        layout_grid.addWidget(self.img_tapo_icon_d, 0, 2)
+
+        self.cb_toggle_theme = QCheckBox("Dark Theme", self)
+        self.cb_toggle_theme.clicked.connect(self.toggle_theme)
+        layout_grid.addWidget(self.cb_toggle_theme, 0, 3)
 
         self.pb_battery = QProgressBar()
         self.pb_battery.setRange(self._range_pb_battery[0], self._range_pb_battery[1])
@@ -127,8 +151,12 @@ class MainWindow (QMainWindow):
         central_widget.setLayout(layout_grid)
 
     def set_charging_image(self, is_charging):
-        self.img_battery_charging.setVisible(is_charging)
-        self.img_battery_discharging.setVisible(not is_charging)
+        if not self._is_dark_theme:
+            self.img_battery_charging.setVisible(is_charging)
+            self.img_battery_discharging.setVisible(not is_charging)
+        else:
+            self.img_battery_charging_d.setVisible(is_charging)
+            self.img_battery_discharging_d.setVisible(not is_charging)
 
     def validate_charging(self):
         if self.is_connected:
@@ -149,8 +177,9 @@ class MainWindow (QMainWindow):
         self.email = self.le_email.text()
         self.lbl_email.setText("Email: " + self.email)
         self.password = self.le_password.text()
+
         data_save(self._range_charge[0], self._range_charge[1],
-                  self.ip, self.email, self.password)
+                  self.ip, self.email, self.password, self._is_dark_theme)
 
     def load_values(self, data):
         self._range_charge[0] = data["min"]
@@ -167,16 +196,43 @@ class MainWindow (QMainWindow):
         self.lbl_email.setText("Email: " + self.email)
         self.password = data["password"]
         self.le_password.setText(data["password"])
+        self._is_dark_theme = data["is_dark_theme"]
+        self.cb_toggle_theme.setChecked(self._is_dark_theme)
 
     def connect_tapo(self):
         connect_tapo(self.ip, self.email, self.password)
         self.is_connected = True
-        self.img_tapo_icon.show()
+
+        if not self._is_dark_theme: self.img_tapo_icon.show()
+        else: self.img_tapo_icon_d.show()
 
     def handle_charging_status(self, is_plugged):
         self._is_plugged = is_plugged
         self.validate_charging()
         self.set_charging_image(is_plugged)
+
+    def toggle_theme(self):
+        self._is_dark_theme = self.cb_toggle_theme.isChecked()
+        self.set_theme()
+
+    def set_theme(self):
+        if self._is_dark_theme:
+            self.img_tapo_icon_d.setVisible(self.img_tapo_icon.isVisible())
+            self.img_battery_charging_d.setVisible(self.img_battery_charging.isVisible())
+            self.img_battery_discharging_d.setVisible(self.img_battery_discharging.isVisible())
+            self.img_tapo_icon.hide()
+            self.img_battery_charging.hide()
+            self.img_battery_discharging.hide()
+            qdarktheme.setup_theme()
+        else:
+            self.img_tapo_icon.setVisible(self.img_tapo_icon_d.isVisible())
+            self.img_battery_charging.setVisible(self.img_battery_charging_d.isVisible())
+            self.img_battery_discharging.setVisible(self.img_battery_discharging_d.isVisible())
+            self.img_tapo_icon_d.hide()
+            self.img_battery_charging_d.hide()
+            self.img_battery_discharging_d.hide()
+            qdarktheme.setup_theme("light")
+
 
     def closeEvent(self, event):
         if hasattr(self, 'thread_update'):
@@ -187,6 +243,10 @@ class MainWindow (QMainWindow):
     def update_battery_charge_value(self, value):
         self.pb_battery.setValue(value)
         self.battery_charge = value
+
+    def resource_path(self, relative_path):
+        base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+        return os.path.join(base_path, relative_path)
 
 class UpdateWorker(QThread):
     battery_update = pyqtSignal(int)
