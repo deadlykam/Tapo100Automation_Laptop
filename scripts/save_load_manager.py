@@ -12,14 +12,16 @@ def data_load():
         data = json.load(f)
     return data
 
-def data_save(min, max, ip, email, password, is_dark_theme):
+def data_save(min, max, ip, email, password, is_dark_theme,
+              is_auto_connect):
     data = {
         "min": min,
         "max": max,
         "ip": ip,
         "email": email,
         "password": password,
-        "is_dark_theme": is_dark_theme
+        "is_dark_theme": is_dark_theme,
+        "is_auto_connect": is_auto_connect
     }
 
     with open(data_name, "w") as f:

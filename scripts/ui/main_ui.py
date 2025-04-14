@@ -27,6 +27,7 @@ class MainWindow (QMainWindow):
     _is_plugged = False
     _is_charging = False
     _is_dark_theme = False
+    _is_auto_connect = False
     battery_charge = 0
     ip = ""
     email = ""
@@ -46,6 +47,7 @@ class MainWindow (QMainWindow):
 
         self.init_ui()
         if is_data(): self.load_values(data_load())
+        if self._is_auto_connect: self.connect_tapo()
         self.set_theme()
         self.thread_update = UpdateWorker(self._refresh_rate)
         self.thread_update.battery_update.connect(self.update_battery_charge_value)
@@ -90,10 +92,6 @@ class MainWindow (QMainWindow):
         self.img_tapo_icon_d.setPixmap(QPixmap(self.resource_path("images/uis/TapoPlug_D_x25.png")))
         self.img_tapo_icon_d.hide()
         layout_grid.addWidget(self.img_tapo_icon_d, 0, 2)
-
-        self.cb_toggle_theme = QCheckBox("Dark Theme", self)
-        self.cb_toggle_theme.clicked.connect(self.toggle_theme)
-        layout_grid.addWidget(self.cb_toggle_theme, 0, 3)
 
         self.pb_battery = QProgressBar()
         self.pb_battery.setRange(self._range_pb_battery[0], self._range_pb_battery[1])
@@ -148,6 +146,14 @@ class MainWindow (QMainWindow):
         self.btn_save.clicked.connect(self.save_values)
         layout_grid.addWidget(self.btn_save, 7, 1)
 
+        self.cb_toggle_auto_connect = QCheckBox("Auto Connect", self)
+        self.cb_toggle_auto_connect.clicked.connect(self.toggle_auto_connect)
+        layout_grid.addWidget(self.cb_toggle_auto_connect, 8, 0)
+
+        self.cb_toggle_theme = QCheckBox("Dark Theme", self)
+        self.cb_toggle_theme.clicked.connect(self.toggle_theme)
+        layout_grid.addWidget(self.cb_toggle_theme, 8, 1)
+
         central_widget.setLayout(layout_grid)
 
     def set_charging_image(self, is_charging):
@@ -179,7 +185,8 @@ class MainWindow (QMainWindow):
         self.password = self.le_password.text()
 
         data_save(self._range_charge[0], self._range_charge[1],
-                  self.ip, self.email, self.password, self._is_dark_theme)
+                  self.ip, self.email, self.password, self._is_dark_theme,
+                  self._is_auto_connect)
 
     def load_values(self, data):
         self._range_charge[0] = data["min"]
@@ -197,14 +204,16 @@ class MainWindow (QMainWindow):
         self.password = data["password"]
         self.le_password.setText(data["password"])
         self._is_dark_theme = data["is_dark_theme"]
+        self._is_auto_connect = data["is_auto_connect"]
         self.cb_toggle_theme.setChecked(self._is_dark_theme)
+        self.cb_toggle_auto_connect.setChecked(self._is_auto_connect)
 
     def connect_tapo(self):
         connect_tapo(self.ip, self.email, self.password)
         self.is_connected = True
-
         if not self._is_dark_theme: self.img_tapo_icon.show()
         else: self.img_tapo_icon_d.show()
+        self.btn_connect.hide()
 
     def handle_charging_status(self, is_plugged):
         self._is_plugged = is_plugged
@@ -217,7 +226,7 @@ class MainWindow (QMainWindow):
 
     def set_theme(self):
         if self._is_dark_theme:
-            self.img_tapo_icon_d.setVisible(self.img_tapo_icon.isVisible())
+            self.img_tapo_icon_d.setVisible(self.is_connected)
             self.img_battery_charging_d.setVisible(self.img_battery_charging.isVisible())
             self.img_battery_discharging_d.setVisible(self.img_battery_discharging.isVisible())
             self.img_tapo_icon.hide()
@@ -225,7 +234,7 @@ class MainWindow (QMainWindow):
             self.img_battery_discharging.hide()
             qdarktheme.setup_theme()
         else:
-            self.img_tapo_icon.setVisible(self.img_tapo_icon_d.isVisible())
+            self.img_tapo_icon.setVisible(self.is_connected)
             self.img_battery_charging.setVisible(self.img_battery_charging_d.isVisible())
             self.img_battery_discharging.setVisible(self.img_battery_discharging_d.isVisible())
             self.img_tapo_icon_d.hide()
@@ -233,6 +242,8 @@ class MainWindow (QMainWindow):
             self.img_battery_discharging_d.hide()
             qdarktheme.setup_theme("light")
 
+    def toggle_auto_connect(self):
+        self._is_auto_connect = self.cb_toggle_auto_connect.isChecked()
 
     def closeEvent(self, event):
         if hasattr(self, 'thread_update'):
