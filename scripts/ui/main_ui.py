@@ -146,13 +146,17 @@ class MainWindow (QMainWindow):
         self.btn_save.clicked.connect(self.save_values)
         layout_grid.addWidget(self.btn_save, 7, 1)
 
+        self.btn_toggle_tapo = QPushButton("Toggle Tapo", self)
+        self.btn_toggle_tapo.clicked.connect(self.toggle_tapo)
+        layout_grid.addWidget(self.btn_toggle_tapo, 8, 0)
+
         self.cb_toggle_auto_connect = QCheckBox("Auto Connect", self)
         self.cb_toggle_auto_connect.clicked.connect(self.toggle_auto_connect)
-        layout_grid.addWidget(self.cb_toggle_auto_connect, 8, 0)
+        layout_grid.addWidget(self.cb_toggle_auto_connect, 9, 0)
 
         self.cb_toggle_theme = QCheckBox("Dark Theme", self)
         self.cb_toggle_theme.clicked.connect(self.toggle_theme)
-        layout_grid.addWidget(self.cb_toggle_theme, 8, 1)
+        layout_grid.addWidget(self.cb_toggle_theme, 9, 1)
 
         central_widget.setLayout(layout_grid)
 
@@ -163,6 +167,11 @@ class MainWindow (QMainWindow):
         else:
             self.img_battery_charging_d.setVisible(is_charging)
             self.img_battery_discharging_d.setVisible(not is_charging)
+
+    def toggle_tapo(self):
+        self._is_charging = not self._is_charging
+        set_tapo(not self._is_plugged)
+
 
     def validate_charging(self):
         if self.is_connected:
