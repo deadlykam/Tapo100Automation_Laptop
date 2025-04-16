@@ -54,7 +54,7 @@ After starting **TapoAutomationLaptop** then you need to fill up all the details
 4. Dark and Light theme.
 5. Toggling the Tapo device on and off.
 ## Versioning
-The project uses [Semantic Versioning](https://semver.org/). Available versions can be seen in [tags on this repository](https://github.com/deadlykam/CodeOptPro_Godot/tags).
+The project uses [Semantic Versioning](https://semver.org/). Available versions can be seen in [tags on this repository](https://github.com/deadlykam/Tapo100Automation_Laptop/tags).
 ***
 ## Authors
 - Syed Shaiyan Kamran Waliullah 
