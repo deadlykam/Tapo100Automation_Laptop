@@ -33,4 +33,11 @@ Let me explain what each part of the application does from the image below.
 - c. **Tapo Connection Status:** This icon will only appear once the Tapo device has been connected.
 - d. **Min:** The minimum threshold value. Once the battery charge value reaches the minimum threshold value then TapoAutomationLaptop will turn on the Tapo device and the laptop will start charging. The minimum value can be any value from 0 to 100. Also once a new value is given and the setting has been saved then the updated value will be shown on the label as well, in this case it is 20% in the label **Min (%) -> 20%**.
 - e **Max:** The maximum threshold value. Once the battery charge value reaches the maximum threshold value then TapoAutomationLaptop will turn off the Tapo device and the laptop will stop charging. The maximum value can be any value from 0 to 100. Also once a new value is given and the setting has been saved then the updated value will be shown on the label as well, in this case it is 80% in the label **Max (%) -> 80%**.
-- f. **IP:**
+- f. **IP:** The local IP address of the Tapo device. It is needed to find the Tapo device in the local network.
+- g. **Email:** The email address of your Tapo account. It is needed to login and access the Tapo device.
+- h. **Password:** The password of your Tapo account. It is needed to login and access the Tapo device.
+- i. **Save:** This button will save the current setting of the **TapoAutomationLaptop**. That way you do NOT need to re-enter all the details again when you re-open the application again.
+- j. **Connect:** This button will connect to the Tapo device. It is first recommended to give the correct login details of the Tapo before connecting to the Tapo device otherwise the application will NOT work.
+- k. **Auto Connect:** If enabled, this flag will auto connect to the Tapo device when the TapoAutomationLaptop starts.
+- l. **Dark Theme:** If enabled, this will show the dark theme of the application. Disabling it again will show the light theme of the application, which is the one shown in the images.
+
