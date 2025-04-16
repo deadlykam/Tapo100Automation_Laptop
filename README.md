@@ -9,7 +9,9 @@ An application that will automatically turn on/off the Tapo100 plug based on the
 
 ## Prerequisites
 #### Python
-Python version of 3.10.6 and later should work. Previous version of Python may work but have not been tested.
+1. Python version of 3.10.6 and later should work. Previous version of Python may work but have not been tested.
+2. [Tapo100 Plug](https://www.tapo.com/uk/product/smart-plug/tapo-p100/).
+3. Tapo100 Firmware version of 1.2.5 Build 240411 should work. Later and previous version have not been tested.
 ## Stable Build
 [Stable-v1.0.0]() is the latest stable build of the project. If development is going to be done on this project then it is adviced to branc off of any _Stable_ branches because they will **NOT** be changed or updated except for README.md. Any other brances are subjected to change including the main branch.
 ## Installation
@@ -41,3 +43,4 @@ Let me explain what each part of the application does from the image below.
 - k. **Auto Connect:** If enabled, this flag will auto connect to the Tapo device when the TapoAutomationLaptop starts.
 - l. **Dark Theme:** If enabled, this will show the dark theme of the application. Disabling it again will show the light theme of the application, which is the one shown in the images.
 
+After starting **TapoAutomationLaptop** then you need to fill up all the details, especially f, g and h in _Fig 2_. You can also change the min and max value, d and e, and once you are satisfied then click the **Save** button, i in _Fig 2_. This will save all the setting values. Finally click the **Connect** button, j in _Fig 2_. Once you are connected the **Connect** button, j in _Fig 2_, will disappear and the **Tapo Connection Status** icon will be shown, c in _Fig 2_. Now the **TapoAutomationLaptop** application will automatically charge and discharge the laptop's battery using the min and max value you provided. If you want to update the min and max values then you can do so and then press the **Save** button.
