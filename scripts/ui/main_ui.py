@@ -66,6 +66,7 @@ class MainWindow (QMainWindow):
                          self._window_position[2],
                          self._window_position[3])
         self.setWindowIcon(QIcon(self.resource_path("images/logo/TAL_Logo_256x256.ico")))
+        self.setStyleSheet("QWidget { font-size: 15px; }")
 
         self._is_charging = psutil.sensors_battery().power_plugged # Getting the first charge value
 
@@ -96,35 +97,35 @@ class MainWindow (QMainWindow):
 
         self.img_battery_discharging = QLabel(self)
         self.img_battery_discharging.setGeometry(0, 0, 50, 25)
-        self.img_battery_discharging.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Discharging_50x25.png")))
+        self.img_battery_discharging.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Discharging_100x50.png")))
         self.img_battery_discharging.show()
         layout_grid.addWidget(self.img_battery_discharging, 1, 0)
 
         self.img_battery_discharging_d = QLabel(self)
         self.img_battery_discharging_d.setGeometry(0, 0, 50, 25)
-        self.img_battery_discharging_d.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Discharging_D_50x25.png")))
+        self.img_battery_discharging_d.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Discharging_D_100x50.png")))
         self.img_battery_discharging_d.hide()
         layout_grid.addWidget(self.img_battery_discharging_d, 1, 0)
 
         self.img_battery_charging = QLabel(self)
         self.img_battery_charging.setGeometry(0, 0, 50, 25)
-        self.img_battery_charging.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Charging_50x25.png")))
+        self.img_battery_charging.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Charging_100x50.png")))
         self.img_battery_charging.hide()
         layout_grid.addWidget(self.img_battery_charging, 1, 0)
 
         self.img_battery_charging_d = QLabel(self)
         self.img_battery_charging_d.setGeometry(0, 0, 50, 25)
-        self.img_battery_charging_d.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Charging_D_50x25.png")))
+        self.img_battery_charging_d.setPixmap(QPixmap(self.resource_path("images/uis/Battery_Charging_D_100x50.png")))
         self.img_battery_charging_d.hide()
         layout_grid.addWidget(self.img_battery_charging_d, 1, 0)
 
         self.img_tapo_icon = QLabel(self)
-        self.img_tapo_icon.setPixmap(QPixmap(self.resource_path("images/uis/TapoPlug_x25.png")))
+        self.img_tapo_icon.setPixmap(QPixmap(self.resource_path("images/uis/TapoPlug_x50.png")))
         self.img_tapo_icon.hide()
         layout_grid.addWidget(self.img_tapo_icon, 1, 1)
 
         self.img_tapo_icon_d = QLabel(self)
-        self.img_tapo_icon_d.setPixmap(QPixmap(self.resource_path("images/uis/TapoPlug_D_x25.png")))
+        self.img_tapo_icon_d.setPixmap(QPixmap(self.resource_path("images/uis/TapoPlug_D_x50.png")))
         self.img_tapo_icon_d.hide()
         layout_grid.addWidget(self.img_tapo_icon_d, 1, 1)
 
