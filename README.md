@@ -15,7 +15,7 @@ The Tapo deviced used for testing is the [Tapo100 Plug](https://www.tapo.com/uk/
 #### Operating System
 For now it works in windows 11. Other OS have not been tested in.
 ## Stable Build
-[Stable-v1.0.0]() is the latest stable build of the project. If development is going to be done on this project then it is adviced to branc off of any _Stable_ branches because they will **NOT** be changed or updated except for README.md. Any other brances are subjected to change including the main branch.
+[Stable-v1.0.0](https://github.com/deadlykam/Tapo100Automation_Laptop/tree/Stable-v1.0.0) is the latest stable build of the project. If development is going to be done on this project then it is adviced to branc off of any _Stable_ branches because they will **NOT** be changed or updated except for README.md. Any other brances are subjected to change including the main branch.
 ## Installation
 1. First download the latest [TAL-v1.0.0.zip](https://github.com/deadlykam/Tapo100Automation_Laptop/releases/tag/v1.0.0) from the latest Stable build.
 2. Once downloaded extract/unzip the file.
