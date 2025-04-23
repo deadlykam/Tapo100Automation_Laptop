@@ -6,6 +6,17 @@
 An application that will automatically turn on/off the Tapo100 plug based on the Laptop battery percentage for Windows 11 machines.
 
 ## Table of Contents:
+- [Prerequisites](#prerequisites)
+  - [Python](#python)
+  - [Tapo Device](#tapo-device)
+  - [Operating System](#operating-system)
+- [Stable Build](#stable-build)
+- [Installation](#installation)
+- [Tutorial](#tutorial)
+- [Updates](#updates)
+- [Versioning](#versioning)
+- [Authors](#authors)
+- [License](#license)
 
 ## Prerequisites
 #### Python
