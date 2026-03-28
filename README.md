@@ -10,6 +10,7 @@ An application that will automatically turn on/off the Tapo100 plug based on the
   - [Python](#python)
   - [Tapo Device](#tapo-device)
   - [Operating System](#operating-system)
+  - [Tapo App](#tapo-app)
 - [Stable Build](#stable-build)
 - [Installation](#installation)
 - [Tutorial](#tutorial)
@@ -25,6 +26,8 @@ Python version of 3.10.6 and later should work. Previous version of Python may w
 The Tapo deviced used for testing is the [Tapo100 Plug](https://www.tapo.com/uk/product/smart-plug/tapo-p100/). Also the Tapo100 Plug Firmware version of 1.2.5 Build 240411 should work. Later and previous version have not been tested.
 #### Operating System
 For now it works in windows 11. Other OS have not been tested in.
+#### Tapo App:
+Install the Tapo Official App and enable the "Third-Party Compatibilty".
 ## Stable Build
 [Stable-v1.0.0](https://github.com/deadlykam/Tapo100Automation_Laptop/tree/Stable-v1.0.0) is the latest stable build of the project. If development is going to be done on this project then it is adviced to branc off of any _Stable_ branches because they will **NOT** be changed or updated except for README.md. Any other brances are subjected to change including the main branch.
 ## Installation
